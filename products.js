@@ -5,7 +5,7 @@ let products = JSON.parse(localStorage.getItem("products"))
         title: "H9",
         category: "Haval",
         price: 350000,
-        img: "https://thorphaval.co.za/haval-products/haval-h9/?gclid=CjwKCAiAxJSPBhAoEiwAeO_fPzDJ4ueepPZ7JpuDRQlnnrFtYsZhYx432P7l-tH48ugQxJgn8sEAuhoCUjoQAvD_BwE",
+        img: "https://www.haval-global.com/dist/site/images/car-model/H9/kv1-m.jpg",
       },
       {
         title: "Jolion H2",
