@@ -2,61 +2,69 @@ let products = JSON.parse(localStorage.getItem("products"))
   ? JSON.parse(localStorage.getItem("products"))
   : [
       {
-        title: "bananas",
-        category: "Fruit",
-        price: 9.99,
-        img: "https://i.postimg.cc/FHrjH935/banana.jpg",
+        title: "H9",
+        category: "Haval",
+        price: 350000,
+        img: "https://thorphaval.co.za/haval-products/haval-h9/?gclid=CjwKCAiAxJSPBhAoEiwAeO_fPzDJ4ueepPZ7JpuDRQlnnrFtYsZhYx432P7l-tH48ugQxJgn8sEAuhoCUjoQAvD_BwE",
       },
       {
-        title: "apples",
-        category: "Fruit",
-        price: 9.99,
-        img: "https://i.postimg.cc/W4Kr8gKT/apple.jpg",
+        title: "Jolion H2",
+        category: "Haval",
+        price: 309000,
+        img: "https://carsguide-res.cloudinary.com/image/upload/f_auto%2Cfl_lossy%2Cq_auto%2Ct_default/v1/editorial/2021-Haval-Jolion-H2-SUV-grey-1001x565-1.jpg",
       },
       {
-        title: "peaches",
-        category: "Fruit",
-        price: 9.99,
-        img: "https://i.postimg.cc/Vv9CzTNk/peach.jpg",
+        title: "3 series",
+        category: "BMW",
+        price: 400000,
+        img: "https://www.topgear.com/sites/default/files/cars-car/image/2018/12/bmw_330i_m_sport-037.jpg?w=1280&h=720",
       },
       {
-        title: "grapes",
-        category: "Fruit",
-        price: 9.99,
-        img: "https://i.postimg.cc/SKw2Cq2K/grapes.jpg",
+        title: "1 series",
+        category: "BMW",
+        price: 120000,
+        img: "https://www.topgear.com/sites/default/files/cars-car/carousel/2019/07/003_bmw_118d.jpg",
       },
       {
-        title: "kiwi",
-        category: "Fruit",
-        price: 9.99,
-        img: "https://i.postimg.cc/43TbRzPP/Kiwi-Fruit.jpg",
+        title: "G Wagon",
+        category: "Mercedes",
+        price: 1589000,
+        img: "https://i.pinimg.com/736x/d8/d8/86/d8d886577fcdfdc0c8734d9637c18dde.jpg",
       },
       {
-        title: "oranges",
-        category: "Fruit",
-        price: 9.99,
-        img: "https://i.postimg.cc/5NKQm8Dy/Oranges.jpg",
+        title: "Kompressor",
+        category: "Mercedes",
+        price: 1000000,
+        img: "https://i.i-sgcm.com/news/article_reviews/2011/358_p1_s_1.jpg",
       },
     ];
 
+let cart = JSON.parse(localStorage.getItem("cart"))
+  ? JSON.parse(localStorage.getItem("cart"))
+  : [];
 // READ
 function readProducts(products) {
+  document.querySelector("#badge").innerHTML = cart.length;
   document.querySelector("#products").innerHTML = "";
   products.forEach((product, position) => {
     document.querySelector("#products").innerHTML += `
-      <div class="card">
+<div class="card">
         <img src="${product.img}" class="card-img-top" alt="${product.title}">
         <div class="card-body">
           <h5 class="card-title">${product.title}</h5>
           <p class="card-text">R${product.price}</p>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProduct${position}" >
-            Edit
+          <input type="number" min=1 value=1 id="addToCart${position}" style="width:45px">
+          <button type="button" data-toggle="tooltip" title="Add to cart" class="btn btn-secondary"  onclick="addToCartProduct(${position})" >
+          <i class="material-icons">add_shopping_cart</i>
           </button>
-          <button type="button" class="btn btn-danger" onclick="deleteProduct(${position})" >
-            Delete
+          <button type="button" data-toggle="tooltip" title="Edit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProduct${position}" >
+            <i class="material-icons">edit</i>
+          </button>
+          <button type="button" data-toggle="tooltip" title="Delet" class="btn btn-danger" onclick="deleteProduct(${position})" >
+          <i class="material-icons">delete_sweep</i>
           </button>
 
-           
+
               <div
                 class="modal fade"
                 id="editProduct${position}"
@@ -95,9 +103,9 @@ function readProducts(products) {
                           name="editCategory${position}"
                           id="editCategory${position}"
                         >
-                          <option value="Fruit">Fruit</option>
-                          <option value="Vegetables">Vegetables</option>
-                          <option value="Meat">Meat</option>
+                          <option value="Haval">Haval</option>
+                          <option value="BMW">BMW</option>
+                          <option value="Mercedes">Mercedes</option>
                         </select>
                       </div>
                       <div class="mb-3">
@@ -204,4 +212,62 @@ function deleteProduct(position) {
     localStorage.setItem("products", JSON.stringify(products));
     readProducts(products);
   }
+}
+
+// ADD TO CART
+function addToCartProduct(position) {
+  let qty = document.querySelector(`#addToCart${position}`).value;
+  // alert(`Added ${qty} to cart`);
+
+  cart.push({ ...products[position], qty });
+  document.querySelector("#badge").innerHTML = cart.length;
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// SORT BY CATEGORY
+function sortCategory() {
+  let category = document.querySelector("#sortCategory").value;
+
+  if (category == "All") {
+    return readProducts(products);
+  }
+
+  let foundProducts = products.filter((product) => {
+    return product.category == category;
+  });
+
+  readProducts(foundProducts);
+  console.log(foundProducts);
+}
+
+// SORT BY NAME
+
+function sortName() {
+  let direction = document.querySelector("#sortName").value;
+
+  let sortedProducts = products.sort((a, b) => {
+    if (a.title.toLowerCase() < b.title.toLowerCase()) {
+      return -1;
+    }
+    if (a.title.toLowerCase() > b.title.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+  if (direction == "descending") sortedProducts.reverse();
+  console.log(sortedProducts);
+  readProducts(products);
+}
+
+// SORT BY PRICE
+
+function sortPrice() {
+  let direction = document.querySelector("#sortPrice").value;
+
+  let sortedProducts = products.sort((a, b) => a.price - b.price);
+
+  console.log(sortedProducts);
+
+  if (direction == "descending") sortedProducts.reverse();
+  readProducts(sortedProducts);
 }
